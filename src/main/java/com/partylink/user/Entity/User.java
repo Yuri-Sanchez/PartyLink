@@ -1,4 +1,4 @@
-package com.partylink.User.Entity;
+package com.partylink.user.Entity;
 
 import jakarta.persistence.*;
 import lombok.*;
