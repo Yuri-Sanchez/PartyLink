@@ -1,0 +1,24 @@
+spring:
+  application:
+    name: partylink
+
+  datasource:
+    url: ${DB_URL}
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
+    driver-class-name: org.postgresql.Driver
+
+    jpa:
+      database-platform: org.hibernate.PostgreSQLDialect
+      show-sql: true
+      hibernate:
+        ddl-auto: validate
+
+      open-in-view: false
+
+      properties:
+        hibernate:
+          format_sql: true
+
+      flyway:
+        enabled: true
