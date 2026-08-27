@@ -1,8 +1,10 @@
-package com.partylink.user.Entity;
+package com.partylink.user.entity;
 
 import com.partylink.role.entity.Role;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDate;
 import java.time.OffsetDateTime;
@@ -51,11 +53,13 @@ public class User {
     @Builder.Default
     private UserStatus status = UserStatus.ACTIVE;
 
+    @CreationTimestamp
     @Column(name = "created_at", nullable = false)
-    private OffsetDateTime created_at;
+    private OffsetDateTime createdAt;
 
+    @UpdateTimestamp
     @Column(name = "updated_at", nullable = false)
-    private OffsetDateTime updated_at;
+    private OffsetDateTime updatedAt;
 
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
@@ -65,17 +69,4 @@ public class User {
     )
     @Builder.Default
     private Set<Role> roles = new HashSet<>();
-
-    @PrePersist
-    protected void onCreate(){
-        OffsetDateTime now = OffsetDateTime.now();
-
-        created_at = now;
-        updated_at= now;
-    }
-
-    @PreUpdate
-    protected void onUpdate(){
-        updated_at = OffsetDateTime.now();
-    }
 }

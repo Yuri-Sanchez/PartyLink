@@ -1,4 +1,4 @@
-package com.partylink.user.Entity;
+package com.partylink.user.entity;
 
 public enum UserStatus {
     ACTIVE,

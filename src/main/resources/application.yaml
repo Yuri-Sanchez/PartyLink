@@ -13,7 +13,6 @@ spring:
       show-sql: true
       hibernate:
         ddl-auto: validate
-
       open-in-view: false
 
       properties:
@@ -22,3 +21,8 @@ spring:
 
       flyway:
         enabled: true
+
+security:
+  jwt:
+    secret: ${JWT_SECRET}
+    expiration: ${JWT_EXPIRATION}
