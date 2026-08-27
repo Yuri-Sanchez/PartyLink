@@ -6,7 +6,7 @@ import java.time.LocalDate;
 
 public record RegisterRequest(
         @NotBlank(message = "Name is required")
-        @Size(max = 150, message = "Name must have at most 150 chatacters")
+        @Size(max = 150, message = "Name must have at most 150 characters")
         String name,
 
         @NotBlank(message = "Email is required")
@@ -15,7 +15,7 @@ public record RegisterRequest(
         String email,
 
         @NotBlank(message = "Password is required")
-        @Size(max = 255, message = "Password must have between 8 and 100 characters")
+        @Size(min = 8, max = 255, message = "Password must have between 8 and 100 characters")
         String password,
 
         @Size(max = 20, message = "Phone must have at most 20 characters")

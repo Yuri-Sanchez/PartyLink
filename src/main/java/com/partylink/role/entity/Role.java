@@ -2,7 +2,6 @@ package com.partylink.role.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
-import org.springframework.security.web.csrf.CsrfTokenRepository;
 
 import java.util.UUID;
 

@@ -6,6 +6,7 @@ import com.partylink.user.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -16,8 +17,13 @@ public class UserController {
     private final UserService userService;
 
     @PostMapping
-    @ResponseStatus(HttpStatus.ACCEPTED)
+    @ResponseStatus(HttpStatus.CREATED)
     public RegisterResponse register(@Valid @RequestBody RegisterRequest request){
         return userService.register(request);
+    }
+
+    @GetMapping("/me")
+    public String me(Authentication authentication) {
+        return "Authenticated user ID: " + authentication.getName();
     }
 }

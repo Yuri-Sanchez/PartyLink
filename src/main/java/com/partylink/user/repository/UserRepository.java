@@ -1,6 +1,6 @@
 package com.partylink.user.repository;
 
-import com.partylink.user.Entity.User;
+import com.partylink.user.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;
