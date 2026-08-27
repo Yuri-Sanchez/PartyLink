@@ -40,4 +40,17 @@ public class GlobalExceptionHandler {
                 errors
         );
     }
+
+    @ExceptionHandler(Exception.class)
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    public ApiError handleGenericException(Exception exception) {
+
+        System.err.println("🚨 UNHANDLED EXCEPTION DETECTED: " + exception.getClass().getName());
+        exception.printStackTrace();
+
+        return new ApiError(
+                HttpStatus.INTERNAL_SERVER_ERROR.value(),
+                "An unexpected internal error occurred. Our team has been notified."
+        );
+    }
 }
