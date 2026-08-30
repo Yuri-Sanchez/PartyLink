@@ -34,17 +34,19 @@ public class SecurityConfig {
             .authorizeHttpRequests
                     (auth -> auth
                             .requestMatchers("/api/v1/auth/**").permitAll()
-                            .requestMatchers(HttpMethod.POST, "/api/v1/users").permitAll().anyRequest().authenticated()
+                            .requestMatchers(HttpMethod.POST, "/api/v1/users").permitAll()
+                            .anyRequest().authenticated()
                     )
             .exceptionHandling(exception -> exception
-                    .authenticationEntryPoint((request, response, authException) -> {response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-                response.setContentType("application/json");
-                response.getWriter().write("""
-                        {
-                            "status": 401,
-                            "message": "Authentication required"
-                        }
-                        """);}))
+                    .authenticationEntryPoint((request, response, authException) -> {
+                        response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                        response.setContentType("application/json");
+                        response.getWriter().write("""
+                                {
+                                    "status": 401,
+                                    "message": "Authentication required"
+                                }
+                                """);}))
             .addFilterBefore(
                     jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
 
