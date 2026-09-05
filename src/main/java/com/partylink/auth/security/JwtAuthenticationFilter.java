@@ -5,6 +5,8 @@ import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.auth0.jwt.interfaces.DecodedJWT;
+import com.partylink.user.entity.User;
+import com.partylink.user.repository.UserRepository;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -16,17 +18,19 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
-import java.util.Collections;
+import java.util.UUID;
 
 @Component
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     private final JWTVerifier jwtVerifier;
+    private final UserRepository userRepository;
 
-    public JwtAuthenticationFilter(@Value("${security.jwt.secret}") String secret){
+    public JwtAuthenticationFilter(@Value("${security.jwt.secret}") String secret, UserRepository userRepository){
         Algorithm algorithm = Algorithm.HMAC256(secret);
 
         this.jwtVerifier = JWT.require(algorithm).build();
+        this.userRepository = userRepository;
     }
 
     @Override
@@ -43,14 +47,23 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
         try{
             DecodedJWT decodedJWT = jwtVerifier.verify(token);
+            String userIdStr = decodedJWT.getSubject();
 
-            String userId = decodedJWT.getSubject();
+            UUID userId = UUID.fromString(userIdStr);
+            User user = userRepository.findByIdWithRoles(userId).orElse(null);
 
-            UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(userId, null, Collections.emptyList());
+            if(user != null) {
+                UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
+                        user,
+                        null,
+                        user.getAuthorities()
+                );
 
-            SecurityContextHolder.getContext().setAuthentication(authentication);
+                SecurityContextHolder.getContext().setAuthentication(authentication);
+            }
 
-        }catch (JWTVerificationException exception){
+
+        }catch (JWTVerificationException | IllegalArgumentException exception){
 
             SecurityContextHolder.clearContext();
 
