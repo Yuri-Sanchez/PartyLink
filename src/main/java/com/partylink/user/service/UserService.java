@@ -8,6 +8,7 @@ import com.partylink.user.entity.User;
 import com.partylink.user.entity.UserStatus;
 import com.partylink.user.dto.RegisterRequest;
 import com.partylink.user.dto.RegisterResponse;
+import com.partylink.user.mapper.RegisterMapper;
 import com.partylink.user.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -43,25 +44,15 @@ public class UserService {
                         new IllegalStateException("CUSTOMER role not found")
                 );
 
-        User user = User.builder()
-                .name(request.name())
-                .email(request.email().trim().toLowerCase())
-                .password(passwordEncoder.encode(request.password()))
-                .phone(request.phone())
-                .dateOfBirth(request.dateOfBirth())
-                .status(UserStatus.ACTIVE)
-                .build();
+        User user = RegisterMapper.toUser(request);
 
+        user.setEmail(request.email().trim().toLowerCase());
+        user.setPassword(passwordEncoder.encode((request.password())));
+        user.setStatus(UserStatus.ACTIVE);
         user.getRoles().add(customerRole);
 
         User savedUser = userRepository.save(user);
 
-        return new RegisterResponse(
-                savedUser.getId(),
-                savedUser.getName(),
-                savedUser.getEmail(),
-                savedUser.getPhone(),
-                savedUser.getDateOfBirth()
-        );
+        return RegisterMapper.toRegisterResponse(savedUser);
     }
 }
