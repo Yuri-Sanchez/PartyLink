@@ -1,10 +1,12 @@
 package com.partylink.user.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import lombok.Builder;
 
 import java.time.LocalDate;
 import java.util.UUID;
 
+@Builder
 public record RegisterResponse(
          UUID id,
          String name,
